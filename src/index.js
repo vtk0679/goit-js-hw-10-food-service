@@ -3,7 +3,7 @@ import './sass/main.scss';
 import menuTemplate from './templates/menu.hbs';
 import menuData from './menu.json';
 
-const STORAGE_KEY = 'isDarkTheme';
+const STORAGE_KEY = 'Theme';
 const Theme = {
   LIGHT: 'light-theme',
   DARK: 'dark-theme',
@@ -18,17 +18,24 @@ themeSwitchRef.onchange = onThemeChange;
 onPageLoad();
 
 function onThemeChange() {
-  bodyRef.classList.toggle(Theme.LIGHT);
-  bodyRef.classList.toggle(Theme.DARK);
-  if (bodyRef.classList.contains(Theme.DARK)) localStorage.setItem(STORAGE_KEY, true);
-  else localStorage.setItem(STORAGE_KEY, false);
+  if (bodyRef.classList.contains(Theme.DARK)) {
+    bodyRef.classList.replace(Theme.DARK, Theme.LIGHT);
+    saveTheme('LIGHT');
+  } else {
+    bodyRef.classList.replace(Theme.LIGHT, Theme.DARK);
+    saveTheme('DARK');
+  }
 }
 
 function onPageLoad() {
-  if (localStorage.getItem(STORAGE_KEY) === 'true') {
+  const currTheme = getTheme();
+  if (currTheme === 'DARK') {
     themeSwitchRef.checked = true;
     bodyRef.classList.add(Theme.DARK);
-  } else bodyRef.classList.add(Theme.LIGHT);
+  } else {
+    bodyRef.classList.add(Theme.LIGHT);
+    if (!currTheme) saveTheme('LIGHT');
+  }
 
   renderMenu();
 }
@@ -36,4 +43,12 @@ function onPageLoad() {
 function renderMenu() {
   const markup = menuTemplate(menuData);
   menuRef.innerHTML = markup;
+}
+
+function saveTheme(theme) {
+  localStorage.setItem(STORAGE_KEY, theme);
+}
+
+function getTheme() {
+  return localStorage.getItem(STORAGE_KEY);
 }
