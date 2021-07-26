@@ -1,9 +1,8 @@
 import './sass/main.scss';
 
-import menuTemplate from './templates/menu.hbs';
-import menuData from './menu.json';
+import { saveTheme, getTheme } from './js/memory';
+import { renderMenu } from './js/render';
 
-const STORAGE_KEY = 'Theme';
 const Theme = {
   LIGHT: 'light-theme',
   DARK: 'dark-theme',
@@ -11,7 +10,6 @@ const Theme = {
 
 const themeSwitchRef = document.getElementById('theme-switch-toggle');
 const bodyRef = document.querySelector('body');
-const menuRef = document.querySelector('ul.js-menu');
 
 themeSwitchRef.onchange = onThemeChange;
 
@@ -38,17 +36,4 @@ function onPageLoad() {
   }
 
   renderMenu();
-}
-
-function renderMenu() {
-  const markup = menuTemplate(menuData);
-  menuRef.innerHTML = markup;
-}
-
-function saveTheme(theme) {
-  localStorage.setItem(STORAGE_KEY, theme);
-}
-
-function getTheme() {
-  return localStorage.getItem(STORAGE_KEY);
 }
